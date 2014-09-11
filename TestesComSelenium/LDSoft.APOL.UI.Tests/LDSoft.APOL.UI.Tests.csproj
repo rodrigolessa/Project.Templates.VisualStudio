@@ -1,0 +1,291 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F98780E6-F2DA-4F10-A30F-D4B9AC1C113B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LDSoft.APOL.UI.Tests</RootNamespace>
+    <AssemblyName>LDSoft.APOL.UI.Tests</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Leandro|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Leandro\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rodrigo|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Rodrigo\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Leonardo|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Leonardo\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Label="SlowCheetah">
+    <SlowCheetahToolsPath>$([System.IO.Path]::GetFullPath( $(MSBuildProjectDirectory)\..\packages\SlowCheetah.2.5.10.6\tools\))</SlowCheetahToolsPath>
+    <SlowCheetah_EnableImportFromNuGet Condition=" '$(SC_EnableImportFromNuGet)'=='' ">true</SlowCheetah_EnableImportFromNuGet>
+    <SlowCheetah_NuGetImportPath Condition=" '$(SlowCheetah_NuGetImportPath)'=='' ">$([System.IO.Path]::GetFullPath( $(MSBuildProjectDirectory)\Properties\SlowCheetah\SlowCheetah.Transforms.targets ))</SlowCheetah_NuGetImportPath>
+    <SlowCheetahTargets Condition=" '$(SlowCheetah_EnableImportFromNuGet)'=='true' and Exists('$(SlowCheetah_NuGetImportPath)') ">$(SlowCheetah_NuGetImportPath)</SlowCheetahTargets>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.core">
+      <HintPath>..\packages\NUnitTestAdapter.1.0\lib\nunit.core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.6.3.13283, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.util">
+      <HintPath>..\packages\NUnitTestAdapter.1.0\lib\nunit.util.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NUnit.VisualStudio.TestAdapter">
+      <HintPath>..\packages\NUnitTestAdapter.1.0\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="TechTalk.SpecFlow">
+      <HintPath>..\packages\SpecFlow.1.9.0\lib\net35\TechTalk.SpecFlow.dll</HintPath>
+    </Reference>
+    <Reference Include="WebDriver">
+      <HintPath>..\packages\Selenium.WebDriver.2.41.0\lib\net35\WebDriver.dll</HintPath>
+    </Reference>
+    <Reference Include="WebDriver.Support">
+      <HintPath>..\packages\Selenium.Support.2.41.0\lib\net35\WebDriver.Support.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\Constants.cs" />
+    <Compile Include="Common\DTO\JeimisDTO.cs" />
+    <Compile Include="Common\Enumerators.cs" />
+    <Compile Include="Features\Autenticacao.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Autenticacao.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\CadastroImagensJeimis.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CadastroImagensJeimis.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Navigation\APOL\Base\InicioPageFactory.cs" />
+    <Compile Include="Navigation\APOL\Marcas\ProcessoListaPage.cs" />
+    <Compile Include="Navigation\APOL\Patentes\Parecer.cs" />
+    <Compile Include="Navigation\APOL\Patentes\PesquisaProcessoWebseekPage.cs" />
+    <Compile Include="Navigation\Intranet\AdminAPOL\JeimisCadastroPage.cs" />
+    <Compile Include="Navigation\Intranet\AdminAPOL\JeimisListaPage.cs" />
+    <Compile Include="Navigation\Intranet\AdminAPOL\JeimisMensagem.cs" />
+    <Compile Include="Navigation\Intranet\AdminAPOL\ListaDeOpcoesPage.cs" />
+    <Compile Include="Navigation\Intranet\InicioPage.cs" />
+    <Compile Include="Navigation\Intranet\IntranetBase.cs" />
+    <Compile Include="Navigation\Intranet\LoginPage.cs" />
+    <Compile Include="Navigation\Intranet\AdminAPOL\UsuarioDetalhePage.cs" />
+    <Compile Include="Navigation\Intranet\AdminAPOL\UsuarioListaPage.cs" />
+    <Compile Include="Navigation\PortalLD\LoginPage.cs" />
+    <Compile Include="Navigation\PortalLD\PortalLDBase.cs" />
+    <Compile Include="Navigation\PortalLD\PortalLDNavigation.cs" />
+    <Compile Include="Navigation\WebElementExtensions.cs" />
+    <Compile Include="Navigation\Webseek\WebseekBase.cs" />
+    <Compile Include="Navigation\Webseek\WebseekNavigation.cs" />
+    <Compile Include="Navigation\APOL\Administracao\AdministracaoInternoBasePage.cs" />
+    <Compile Include="Navigation\APOL\Administracao\SacadorDetalhePage.cs" />
+    <Compile Include="Navigation\APOL\Administracao\EnvolvidoListaPage.cs" />
+    <Compile Include="Navigation\APOL\Administracao\EnvolvidoDetalhePage.cs" />
+    <Compile Include="Navigation\APOL\Administracao\InicioPage.cs" />
+    <Compile Include="Navigation\APOL\Base\APOLBasePage.cs" />
+    <Compile Include="Navigation\APOL\Marcas\InicioPage.cs" />
+    <Compile Include="Navigation\APOL\Marcas\MarcasInternoBasePage.cs" />
+    <Compile Include="Navigation\APOL\Administracao\MenuAdministracao.cs" />
+    <Compile Include="Navigation\APOL\Marcas\MenuMarcas.cs" />
+    <Compile Include="Navigation\APOL\Administracao\ParametroGuiaPage.cs" />
+    <Compile Include="Navigation\APOL\Base\APOLInternoBasePage.cs" />
+    <Compile Include="Navigation\APOL\ArquivoAnexoPage.cs" />
+    <Compile Include="Navigation\APOL\IModuloMenuNavigation.cs" />
+    <Compile Include="Navigation\APOL\Base\MenuBase.cs" />
+    <Compile Include="Navigation\APOL\CaptureCaptchaPage.cs" />
+    <Compile Include="Navigation\APOL\Juridico\ContratoDetalhePage.cs" />
+    <Compile Include="Navigation\APOL\Juridico\ContratoListaPage.cs" />
+    <Compile Include="Navigation\APOL\Juridico\InicioPage.cs" />
+    <Compile Include="Navigation\APOL\Juridico\JuridicoInternoBasePage.cs" />
+    <Compile Include="Navigation\APOL\Juridico\MenuJuridico.cs" />
+    <Compile Include="Navigation\APOL\LoginPage.cs" />
+    <Compile Include="Navigation\APOL\Patentes\MenuJuridico.cs" />
+    <Compile Include="Navigation\APOL\Patentes\PatentesInternoBasePage.cs" />
+    <Compile Include="Navigation\APOL\Patentes\ProcessoDetalhePage.cs" />
+    <Compile Include="Navigation\APOL\Patentes\InicioPage.cs" />
+    <Compile Include="Navigation\APOL\Patentes\ProcessoListaPage.cs" />
+    <Compile Include="Navigation\BasePage.cs" />
+    <Compile Include="Navigation\BrowserHelper.cs" />
+    <Compile Include="Navigation\ModuloConsulta\ModuloConsultaAutenticacaoNavigation.cs" />
+    <Compile Include="Navigation\ModuloConsulta\ModuloConsultaBase.cs" />
+    <Compile Include="Navigation\ModuloConsulta\ModuloConsultaNavigation.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\Mensagens.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Mensagens.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AutenticacaoSteps.cs" />
+    <Compile Include="Steps\CadastroImagensJeimisSteps.cs" />
+    <Compile Include="Tests\BaseTest.cs" />
+    <Compile Include="Tests\EnvolvidoAnexoTest.cs" />
+    <Compile Include="Tests\GuiaTest.cs" />
+    <Compile Include="Tests\IntranetTests.cs" />
+    <Compile Include="Tests\LogaApolJeimisTest.cs" />
+    <Compile Include="Tests\ModuloConsultaTest.cs" />
+    <Compile Include="Tests\PatenteDetalheTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\PortalLDTest.cs" />
+    <Compile Include="Tests\WebseekPatenteTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App.Debug.config">
+      <DependentUpon>App.config</DependentUpon>
+    </None>
+    <None Include="App.Leandro.config">
+      <DependentUpon>App.config</DependentUpon>
+    </None>
+    <None Include="App.Leonardo.config">
+      <DependentUpon>App.config</DependentUpon>
+    </None>
+    <None Include="App.Release.config">
+      <DependentUpon>App.config</DependentUpon>
+    </None>
+    <None Include="App.Rodrigo.config">
+      <DependentUpon>App.config</DependentUpon>
+    </None>
+    <None Include="Features\Autenticacao.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Autenticacao.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\CadastroImagensJeimis.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>CadastroImagensJeimis.feature.cs</LastGenOutput>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\SlowCheetah\SlowCheetah.Transforms.targets" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ARQUIVOANEXO.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="chromedriver.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IEDriverServer.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\imagem\contrato.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\imagem\juridico.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\imagem\marca.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\imagem\patente.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\test-captcha.asp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Navigation\Webseek\Base\" />
+    <Folder Include="Navigation\Webseek\JuntaSP\" />
+    <Folder Include="Navigation\Webseek\Marcas\" />
+    <Folder Include="Navigation\Webseek\Patentes\" />
+    <Folder Include="Navigation\Webseek\ProgComputador\" />
+    <Folder Include="Navigation\Webseek\TransfTecnologia\" />
+    <Folder Include="Navigation\Webseek\Usuario\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Mensagens.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Mensagens.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SlowCheetahTargets)" Condition="Exists('$(SlowCheetahTargets)')" Label="SlowCheetah" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <UsingTask TaskName="TransformXml" AssemblyFile="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Web\Microsoft.Web.Publishing.Tasks.dll" />
+  <Target Name="AfterCompile" Condition="Exists('App.$(Configuration).config')">
+    <!--Generate transformed app config in the intermediate directory-->
+    <TransformXml Source="App.config" Destination="$(IntermediateOutputPath)$(TargetFileName).config" Transform="App.$(Configuration).config" />
+    <!--Force build process to use the transformed configuration file from now on.-->
+    <ItemGroup>
+      <AppConfigWithTargetPath Remove="App.config" />
+      <AppConfigWithTargetPath Include="$(IntermediateOutputPath)$(TargetFileName).config">
+        <TargetPath>$(TargetFileName).config</TargetPath>
+      </AppConfigWithTargetPath>
+    </ItemGroup>
+  </Target>
+  <!--Override After Publish to support ClickOnce AfterPublish. Target replaces the untransformed config file copied to the deployment directory with the transformed one.-->
+  <Target Name="AfterPublish">
+    <PropertyGroup>
+      <DeployedConfig>$(_DeploymentApplicationDir)$(TargetName)$(TargetExt).config$(_DeploymentFileMappingExtension)</DeployedConfig>
+    </PropertyGroup>
+    <!--Publish copies the untransformed App.config to deployment directory so overwrite it-->
+    <Copy Condition="Exists('$(DeployedConfig)')" SourceFiles="$(IntermediateOutputPath)$(TargetFileName).config" DestinationFiles="$(DeployedConfig)" />
+  </Target>
+</Project>
