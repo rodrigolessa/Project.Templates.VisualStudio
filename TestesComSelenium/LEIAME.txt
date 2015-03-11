@@ -1,5 +1,0 @@
-CHROME DRIVER (2.10.267521)
-=============
-https://code.google.com/p/selenium/wiki/ChromeDriver
-https://sites.google.com/a/chromium.org/chromedriver/home
-http://chromedriver.storage.googleapis.com/index.html
