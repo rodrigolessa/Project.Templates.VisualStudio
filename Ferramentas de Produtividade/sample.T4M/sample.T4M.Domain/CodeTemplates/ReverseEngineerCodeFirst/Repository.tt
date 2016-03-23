@@ -1,0 +1,40 @@
+<#
+// Simplifying assumptions based on reverse engineer rules
+//  - No complex types
+//  - One entity container
+//  - No inheritance
+//  - Always have two navigation properties
+//  - All associations expose FKs (except many:many)
+#>
+<#@ template hostspecific="true" language="C#" #>
+<#@ include file="EF.Utility.CS.ttinclude" #>
+<#@ output extension=".cs" #>
+<#
+
+    var efHost = (EfTextTemplateHost)Host;
+    var code = new CodeGenerationTools(this);
+
+	if (efHost.EntityFrameworkVersion >= new Version(4, 4))
+	{
+#>
+using System.ComponentModel.DataAnnotations.Schema;
+<#
+	}
+	else
+	{
+#>
+using System.ComponentModel.DataAnnotations;
+<#
+	}
+#>
+using System.Data.Entity.ModelConfiguration;
+
+namespace <#= code.EscapeNamespace(efHost.Namespace) #>.Repositories
+{
+    public class <#= efHost.EntityType.Name #>Repository : IRepository<<#= efHost.EntityType.Name #>>
+    {
+        public <#= efHost.EntityType.Name #>Repository()
+        {
+        }
+    }
+}
