@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+  <Metadata>
+    <Identity Id="NgScaffoldExtension..20871572-b650-4fc9-a8a6-335ea6ec7804" Version="1.0" Language="en-US" Publisher="Rodrigo Lessa" />
+    <DisplayName>NgScaffoldExtension</DisplayName>
+    <Description xml:space="preserve">Generates ASP.NET MVC with AngularJS for C.R.U.D. scaffolder from Entity Framework</Description>
+    <Icon>ng_atom_96.ico</Icon>
+    <Tags>Angular, ASP.Net, MVC, Scaffolding, Entity Framework, CRUD, C.R.U.D.</Tags>
+  </Metadata>
+  <Installation>
+    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[12.0]" />
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+  </Dependencies>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="NgScaffold" Path="|NgScaffold|" />
+  </Assets>
+</PackageManifest>
