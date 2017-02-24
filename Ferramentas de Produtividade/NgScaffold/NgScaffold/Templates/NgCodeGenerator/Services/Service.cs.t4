@@ -1,0 +1,157 @@
+﻿<#@ template language="C#" HostSpecific="True" Debug="True" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="EnvDTE" #>
+<#@ ScaffoldingAssembly Processor="ScaffoldingAssemblyLoader" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Microsoft.AspNet.Scaffolding.Core.Metadata" #>
+<#@ parameter type="EnvDTE.CodeType" name="ModelType" #>
+<#@ parameter type="System.String" name="Namespace" #>
+<#@ parameter type="System.Collections.Generic.HashSet<System.String>" name="RequiredNamespaces" #>
+<#@ parameter type="Microsoft.AspNet.Scaffolding.Core.Metadata.ModelMetadata" name="MetadataModel" #>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+// Framework LDSoft
+using LDSoft.Comum.Infrastructure;
+using LDSoft.Comum.Infrastructure.Logging;
+using LDSoft.Comum.Infrastructure.Validator;
+using LDSoft.Comum.Infrastructure.Entity;
+using LDSoft.Comum.Infrastructure.Entity.Logging;
+using LDSoft.Comum.Domain;
+using LDSoft.Comum.Domain.Extensions;
+
+<# foreach (var namespaceName in RequiredNamespaces) { #>
+using <#= namespaceName #>;
+<# } #>
+
+namespace <#= Namespace #>
+{
+<# 
+	var dataParameter = ModelType.Name + "Data";
+	var primaryKeyName = MetadataModel.PrimaryKeys[0].PropertyName;
+    var primaryKeyShortTypeName = MetadataModel.PrimaryKeys[0].ShortTypeName;
+#>
+    public class <#= ModelType.Name #>Service : I<#= ModelType.Name #>Service
+    {
+        #region Atributos
+
+        //TODO: Refatorar para só utilizar o repositório do Cliente
+        private readonly IQueryableUnitOfWork _unit;
+        private readonly I<#= ModelType.Name #>Repository _repository;
+
+        #endregion
+
+        #region Construtor
+
+        public <#= ModelType.Name #>Service(
+            I<#= ModelType.Name #>Repository repository,
+            IQueryableUnitOfWork unit)
+        {
+            _unit = unit;
+            _repository = repository;
+        }
+
+        #endregion
+
+        public <#= ModelType.Name #> Obter()
+        {
+            return _repository.GetAll();
+        }
+
+        public <#= ModelType.Name #> Obter(int id)
+        {
+            return _repository.Get(id);
+        }
+
+        public BusinessResponse<bool> Salvar(<#= ModelType.Name #> item)
+        {
+            //TODO: Melhorar validação de entidade para IValidatableObject
+            var erros = item.Validar();
+            if (erros.HasErros())
+                return new BusinessResponse<bool>(false, erros);
+
+            //TODO: Encapsular validação com repositório
+            //if (_repository.GetFiltered(x => x.Nome == item.Nome && x.Id != item.Id).Any())
+                //return new BusinessResponse<bool>(false, MensagensGenericas.ValidationGenericoRegistroComMesmoNome);
+
+			var logs = new List<Log>();
+
+            var entidade = _clienteRepository.Get(item.Id);
+            if (entidade == null)
+            {
+                entidade = item;
+                //entidade.DataDeCriacao = DateTime.Now;
+                //entidade.DataDeAlteracao = null;
+                //entidade.Excluido = false;
+
+                _repository.Add(entidade);
+
+                logs.Add(new Log()
+                {
+                    Acao = Constants.Geral.Acao.Incluir,
+                    Onde = "Inclusão de <#= ModelType.Name #>",
+                    Descricao = string.Format(MensagensGenericas.LogInclusaoRealizadoComSucesso, ""),
+                    Sistema = Constants.Geral.Sistema.Intranet,
+                    IdDoCliente = 0
+                });
+            }
+            else
+            {
+                //HACK: Atribuindo Id para evitar erros no Merge - Corrigir implementação do Merge
+                item.Id = entidade.Id;
+                //item.DataDeCriacao = entidade.DataDeCriacao;
+                //item.DataDeAlteracao = DateTime.Now;
+                //TODO: Corrigir implementação do Merge para funcionar com propriedades de Lista (relacionamentos)
+                _repository.Merge(entidade, item);
+
+                logs.Add(new Log()
+                {
+                    Acao = Constants.Geral.Acao.Alterar,
+                    Onde = "Alteração de <#= ModelType.Name #>",
+                    Descricao = string.Format(MensagensGenericas.LogAlteracaoRealizadoComSucesso, ""),
+                    Sistema = Constants.Geral.Sistema.Intranet,
+                    IdDoCliente = 0
+                });
+			}
+
+			_unit.Commit();
+
+            foreach (Log log in logs)
+                LogFactory.CreateLog().Gerar(log);
+
+			return new BusinessResponse<bool>(true, MensagensGenericas.ValidationGenericoRegistroSalvoComSucesso);
+        }
+
+        public BusinessResponse<bool> Excluir(int id)
+        {
+            var entidade = _repository.Get(id);
+            if (entidade == null)
+                return new BusinessResponse<bool>(false, MensagensGenericas.GenericoRegistroNaoExiste);
+
+            //HACK: Tentativa de excluir endereços do Contato para evitar erro de restrição de integridade no banco
+            //contato.ContatoEnderecoes.ToList().ForEach(end => _enderecoRepository.Remove(end));
+            //contato.Grupoes.Clear();
+
+            _repository.Remove(entidade);
+
+            _unit.Commit();
+
+            LogFactory.CreateLog().Gerar(
+                Constants.Geral.Acao.Excluir,
+                "Exclusão de <#= ModelType.Name #>",
+                string.Format(Mensagens.GenericoExcluidoComSucesso, ""),
+                Constants.Geral.Sistema.Intranet
+				, null
+				, null
+				, 0
+			);
+
+            return new BusinessResponse<bool>(true, string.Format(MensagensGenericas.GenericoExcluidoComSucesso, ""));
+        }
+    }
+}

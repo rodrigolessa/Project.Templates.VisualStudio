@@ -1,0 +1,22 @@
+﻿<#@ template language="C#" HostSpecific="True" Debug="True" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="EnvDTE" #>
+<#@ ScaffoldingAssembly Processor="ScaffoldingAssemblyLoader" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ parameter type="System.String" name="Namespace" #>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
+
+namespace <#= Namespace #>
+{
+    [Authorize]
+    public abstract class SecurityAPIController : ApiController
+    {
+    }
+}

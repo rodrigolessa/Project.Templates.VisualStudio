@@ -10,11 +10,13 @@ using Microsoft.AspNet.Scaffolding.EntityFramework;
 
 using EnvDTE;
 
+using NgScaffold.Model;
+
 namespace NgScaffold.Helpers
 {
-    public class ScaffoldHelpers
+    public static class ScaffoldHelpers
     {
-        public string ObterTipo(string t)
+        public static string PrimeiraLetraMaiuscula(string t)
         {
             return t
                 .Substring(0, 1)
@@ -31,24 +33,22 @@ namespace NgScaffold.Helpers
         /// <param name="modelNamespace"></param>
         /// <param name="tipoNamespace"></param>
         /// <returns></returns>
-        public Dictionary<string, object> Parametros(CodeType entidade, string namespacePadrao, ModelMetadata metaData, string modelNamespace, string tipoNamespace)
+        public static Dictionary<string, object> ParametrosDoTemplate(CodeType entidade, string namespacePadrao, TipoDoModelo contextoDoBanco, ModelMetadata metaData, params string[] dependencias)
         {
-            // 
+            var nomeDaEntidade = PrimeiraLetraMaiuscula(entidade.Name);
+
             return new Dictionary<string, object>()
             {
                 {"ModelType", entidade},
                 {"Namespace", namespacePadrao},
+                {"dbContext", contextoDoBanco.ShortTypeName},
                 {"MetadataModel", metaData},
-                {"RequiredNamespaces", new HashSet<string>() {
-                        entidade.Namespace.FullName, 
-                        ObterNamespaceDeOrigem(entidade.Namespace.FullName) + "." + tipoNamespace,
-                        modelNamespace
-                    }
-                }
+                {"EntitySetVariable", nomeDaEntidade},
+                {"RequiredNamespaces", new HashSet<string>(dependencias)}
             };
         }
 
-        private string ObterNamespaceDeOrigem(string p)
+        public static string ObterNamespaceDeOrigem(string p)
         {
             var nomes = p.Split('.');
 
@@ -56,6 +56,41 @@ namespace NgScaffold.Helpers
                 return nomes[0];
 
             return p;
+        }
+
+        public static string ObterNamespaceAnterior(string p)
+        {
+            var nomes = p.Split('.');
+
+            if (nomes != null || nomes.Count() > 1)
+            {
+                var anterior = nomes[nomes.Count() - 1];
+
+                p = p.Replace("." + anterior, "");
+            }
+
+            return p;
+        }
+
+        public static string ObterNamespaceBase(string p)
+        {
+            var nomes = p.Split('.');
+            
+            //var n = string.Join(".", nomes.Where(x => !_nomesDeCamadas.Contains(x)));
+            var n = string.Empty;
+
+            foreach (string nome in nomes)
+            {
+                if (Constantes.Camadas.Nomes.Contains(nome))
+                    break;
+
+                n += nome + ".";
+            }
+
+            if (!string.IsNullOrEmpty(n))
+                n = n.Substring(0, n.Length - 1);
+
+            return n;
         }
     }
 }

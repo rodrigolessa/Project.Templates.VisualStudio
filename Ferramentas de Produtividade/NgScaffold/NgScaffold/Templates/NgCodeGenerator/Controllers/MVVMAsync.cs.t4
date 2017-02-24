@@ -1,0 +1,37 @@
+﻿<#@ template language="C#" HostSpecific="True" Debug="True" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="EnvDTE" #>
+<#@ ScaffoldingAssembly Processor="ScaffoldingAssemblyLoader" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Microsoft.AspNet.Scaffolding.Core.Metadata" #>
+<#@ parameter type="EnvDTE.CodeType" name="ModelType" #>
+<#@ parameter type="System.String" name="Namespace" #>
+<#@ parameter type="System.Collections.Generic.HashSet<System.String>" name="RequiredNamespaces" #>
+<#@ parameter type="Microsoft.AspNet.Scaffolding.Core.Metadata.ModelMetadata" name="MetadataModel" #>
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+<# foreach (var namespaceName in RequiredNamespaces) { #>
+using <#= namespaceName #>;
+<# } #>
+
+namespace <#= Namespace #>
+{
+
+<# 
+	var dataParameter = ModelType.Name + "Data";
+	var primaryKeyName = MetadataModel.PrimaryKeys[0].PropertyName;
+    var primaryKeyShortTypeName = MetadataModel.PrimaryKeys[0].ShortTypeName;
+#>
+    public class <#= ModelType.Name #>Controller : Controller
+    {
+		// GET: News
+        public ActionResult Index()
+        {
+            return View();
+        }
+    }
+}

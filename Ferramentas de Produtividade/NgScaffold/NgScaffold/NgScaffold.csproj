@@ -51,6 +51,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constantes.cs" />
     <Compile Include="Extensions\ProjetoExtension.cs" />
     <Compile Include="Helpers\ScaffoldHelpers.cs" />
     <Compile Include="NgCodeGenerator.cs" />
@@ -67,14 +68,7 @@
       <DependentUpon>ListarEntidadesView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Templates\NgCodeGenerator\Controllers\MVC.cs.t4">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Templates\NgCodeGenerator\Views\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Page Include="UI\ListarEntidadesView.xaml">
       <SubType>Designer</SubType>
@@ -92,6 +86,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Ngear_16.ico" />
+    <None Include="Templates\NgCodeGenerator\Controllers\MVC.cs.t4">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\NgCodeGenerator\Controllers\MVVM.cs.t4">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\NgCodeGenerator\Controllers\SecurityAPI.cs.t4">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\NgCodeGenerator\Repositories\Repository.cs.t4" />
+    <None Include="Templates\NgCodeGenerator\Services\IRepository.cs.t4" />
+    <None Include="Templates\NgCodeGenerator\Services\IService.cs.t4" />
+    <None Include="Templates\NgCodeGenerator\Services\Service.cs.t4" />
+    <None Include="Templates\NgCodeGenerator\Views\NgView.cs.t4" />
+    <None Include="Templates\NgCodeGenerator\Views\NgViewModel.cs.t4" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Ngear.ico" />

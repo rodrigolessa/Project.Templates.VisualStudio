@@ -21,13 +21,11 @@ namespace NgScaffold
     public class NgCodeGenerator : CodeGenerator
     {
         ListarEntidadesViewModel _viewModel;
-        ScaffoldHelpers _helper;
 
         public NgCodeGenerator(CodeGenerationContext context, CodeGeneratorInformation information)
             : base(context, information)
         {
             _viewModel = new ListarEntidadesViewModel(Context);
-            _helper = new ScaffoldHelpers();
         }
 
         #region Member of CodeGenerator
@@ -52,13 +50,26 @@ namespace NgScaffold
             }
 
             // Contexto do banco selecionado pelo Programador
-            var contextoDoBanco = _viewModel.ContextoDoBancoSelecionado;
+            var contextoDoBanco = _viewModel.ContextoDeBancoSelecionado;
 
             // Lista de Entidades selecionadas pelo Programador
             var listaDeEntidades = _viewModel.ListaDeEntidadesSelecionadas;
 
+            // Define o projeto onde estão as entidades selecionadas
+            Project projetoDaEntidade = null;
+
+            foreach (Project p1 in listaDeProjetos)
+            {
+                if (listaDeEntidades[0].CodeType.Namespace.FullName.StartsWith(p1.Name + "."))
+                {
+                    projetoDaEntidade = p1;
+                    break;
+                }
+            }
+
             // Define o projeto onde existe o contexto do banco
             Project projetoDoContexto = null;
+
             foreach (Project p2 in listaDeProjetos)
             {
                 if (contextoDoBanco.CodeType.Namespace.FullName.StartsWith(p2.Name + "."))
@@ -68,36 +79,43 @@ namespace NgScaffold
                 }
             }
 
-            string namespacePadrao = null;
+            var namespacePadrao = string.Empty;
 
-            string diretorioDaArea = string.Empty;
+            var diretorioDaArea = string.Empty;
 
             if (_viewModel.EhArea)
             {
+                // TODO: Controlar entidades que devem ser criadas dentro de áreas
                 //string AreaName = _viewModel.AreaSelecionada;
-                //ProjectItem AreaItem = AddArea(projetoCorrente, AreaName);
-                //diretorioDaArea = string.Format("Areas\\{0}\\", AreaName);
+                //ProjectItem AreaItem = T4Area(projetoCorrente, nomeDaArea);
+                //diretorioDaArea = string.Format("Areas\\{0}\\", nomeDaArea);
                 //namespacePadrao = AreaItem.GetDefaultNamespace();
             }
 
             var diretorioRelativo = diretorioDaArea;
 
-            //AddMvcModels(projetoCorrente, diretorioRelativo + "Models\\", namespacePadrao);
-
+            // Para cada entidade selecionada, cria um Repositório, um Serviço e um MVC ou MVVM
             foreach (var entidade in listaDeEntidades.Select(p => p.CodeType))
             {
                 // Entity Framework Meta Data
+                // Os VSPackages gerenciados pode usar GetService para obter as interfaces VSSDK COM consultando os assemblies de interoperabilidade
                 IEntityFrameworkService efService = (IEntityFrameworkService)Context.ServiceProvider.GetService(typeof(IEntityFrameworkService));
 
                 // Obtem todas as informações da entidade que o Entity possui. Tipos dos campos e relacionamentos
                 ModelMetadata efMetadata = efService.AddRequiredEntity(Context, contextoDoBanco.TypeName, entidade.FullName);
 
+                // Adiciona a intreface do repositório na camada do contexto do banco
+                RepositorioTipadoInterface(projetoDaEntidade, entidade, contextoDoBanco, efMetadata);
+
+                // Adiciona classe de repositório na camada do contexto do banco
+                RepositorioTipado(projetoDoContexto, entidade, contextoDoBanco, efMetadata);
+
                 // Adiciona classe de serviço na mesma camada do domínio / entidades
-                //AddBLL(projetoDoContexto, entidade, "Service\\", contextoDoBanco, efMetadata);
+                ServicoTipado(projetoDaEntidade, entidade, contextoDoBanco, efMetadata);
 
-                NgController(projetoCorrente, entidade, diretorioRelativo, "Controllers", namespacePadrao, efMetadata);
+                NgControle(projetoCorrente, entidade, diretorioRelativo, namespacePadrao, contextoDoBanco, efMetadata);
 
-                //AddMvcViews(projetoCorrente, diretorioRelativo + "Views\\", entidade, contextoDoBanco, efMetadata, namespacePadrao);
+                NgVisao(projetoCorrente, entidade, diretorioRelativo, namespacePadrao, contextoDoBanco, efMetadata);
             }
         }
 
@@ -113,7 +131,69 @@ namespace NgScaffold
 
         #endregion
 
-        // Criação da camada de Serviço - Domain Service ou BLL (Business Logic Layer)
+        /// <summary>
+        /// Criação da intreface do repositório na camada de Domínio
+        /// </summary>
+        /// <param name="projetoDaEntidade"></param>
+        /// <param name="entidade"></param>
+        /// <param name="contextoDoBanco"></param>
+        /// <param name="efMetadata"></param>
+        private void RepositorioTipadoInterface(Project projetoDaEntidade, CodeType entidade, TipoDoModelo contextoDoBanco, ModelMetadata efMetadata)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Criação do Repositório na camada de Persistência - Infrastructure.Data
+        /// </summary>
+        /// <param name="projetoDoContexto"></param>
+        /// <param name="entidade"></param>
+        /// <param name="contextoDoBanco"></param>
+        /// <param name="efMetadata"></param>
+        private void RepositorioTipado(Project projetoDoContexto, CodeType entidade, TipoDoModelo contextoDoBanco, ModelMetadata efMetadata)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Criação da camada de Domínio - Domain Service ou BLL (Business Logic Layer)
+        /// </summary>
+        /// <param name="projetoDoContexto"></param>
+        /// <param name="entidade"></param>
+        /// <param name="contextoDoBanco"></param>
+        /// <param name="efMetadata"></param>
+        private void ServicoTipado(Project projeto, CodeType entidade, TipoDoModelo contextoDoBanco, ModelMetadata efMetadata)
+        {
+            //// Os serviços sempre devem estar no mesmo projeto que as entidades
+            //var namespaceDoServico = ScaffoldHelpers.ObterNamespaceAnterior(entidade.Namespace.FullName) + "." + Constantes.Pastas.Servicos;
+
+            //// Get the selected code type
+            //var defaultNamespace = (project.Name + ".BLL");
+
+            //string modelTypeVariable = GetTypeVariable(codeType.Name);
+
+            //string BLLName = codeType.Name + "Service";
+            //string outputFolderPath = Path.Combine(selectionRelativePath, BLLName);
+
+            //// Setup the scaffolding item creation parameters to be passed into the T4 template.
+            //var parameters = new Dictionary<string, object>()
+            //{
+            //    {"ModelType", codeType},
+            //    {"Namespace", defaultNamespace},
+            //    {"dbContext", dbContextClass.ShortTypeName},
+            //    {"MetadataModel", efMetadata},
+            //    {"EntitySetVariable", modelTypeVariable},
+            //    {"RequiredNamespaces", new HashSet<string>(){codeType.Namespace.FullName, (project.Name + ".Models")}}
+            //};
+
+            //// Add the custom scaffolding item from T4 template.
+            //this.AddFileFromTemplate(project,
+            //    outputFolderPath,
+            //    "BLL",
+            //    parameters,
+            //    skipIfExists: _viewModel.SkipIfExists);
+        }
+
 
         /// <summary>
         /// Criação do MVC API Controller
@@ -121,53 +201,77 @@ namespace NgScaffold
         /// <param name="projeto"></param>
         /// <param name="entidade"></param>
         /// <param name="diretorioRelativo"></param>
-        /// <param name="template"></param>
         /// <param name="namespacePadrao"></param>
+        /// <param name="namespaceDoContexto"></param>
         /// <param name="efMetadata"></param>
-        private void NgController(
+        private void NgControle(
             Project projeto,
             CodeType entidade,
             string diretorioRelativo,
-            string template,
             string namespacePadrao,
+            TipoDoModelo contextoDoBanco,
             ModelMetadata efMetadata
         )
         {
-            diretorioRelativo = diretorioRelativo + template + "\\";
+            diretorioRelativo = diretorioRelativo + Constantes.Pastas.Controles + "\\";
 
             // Pasta de Modelos
-            string namespaceDoModelo = string.Empty;
-            if (string.IsNullOrEmpty(namespacePadrao))
-                namespaceDoModelo = (projeto.Name + ".Models");
-            else
-                namespaceDoModelo = namespacePadrao + ".Models";
+            //var namespaceDoModelo = string.Empty;
+
+            //if (string.IsNullOrEmpty(namespacePadrao))
+            //    namespaceDoModelo = projeto.Name + "." + Constantes.Pastas.Modelos;
+            //else
+            //    namespaceDoModelo = namespacePadrao + "." + Constantes.Pastas.Modelos;
+
+            // Os serviços sempre devem estar no mesmo projeto que as entidades
+            var namespaceDoServico = ScaffoldHelpers.ObterNamespaceAnterior(entidade.Namespace.FullName) + "." + Constantes.Pastas.Servicos;
 
             // Pastas de Controles
             if (string.IsNullOrEmpty(namespacePadrao))
-                namespacePadrao = (projeto.Name + "." + template);
+                namespacePadrao = (projeto.Name + "." + Constantes.Pastas.Controles);
             else
-                namespacePadrao += "." + template;
+                namespacePadrao += "." + Constantes.Pastas.Controles;
 
-            string tipoDaEntidade = _helper.ObterTipo(entidade.Name);
+            string arquivoDeDestino = Path.Combine(diretorioRelativo, entidade.Name + "Controller");
 
-            string nomeDoController = entidade.Name + template;
+            // Define os parâmetros do scaffold. Modo de transmitir os dados da entidade e o namespace
+            var parametros = ScaffoldHelpers.ParametrosDoTemplate(entidade, namespacePadrao, contextoDoBanco, efMetadata, entidade.Namespace.FullName, namespaceDoServico, contextoDoBanco.CodeType.Namespace.FullName);
 
-            string diretorioDeDestino = Path.Combine(diretorioRelativo, nomeDoController);
-
-            // Define os parâmetros do scaffold
-            var parametros = _helper.Parametros(entidade, namespacePadrao, efMetadata, namespaceDoModelo, "Service");
-
-            // Adiciona o template T4.
+            // Adiciona a classe base dos controles API com Authorize
             this.AddFileFromTemplate(
                 projeto,
-                diretorioDeDestino,
-                template + "\\MVC",
+                Path.Combine(diretorioRelativo, "SecurityAPIController"),
+                Constantes.Pastas.Controles + "\\SecurityAPI",
+                ScaffoldHelpers.ParametrosDoTemplate(entidade, namespacePadrao, contextoDoBanco, efMetadata),
+                true
+            );
+
+            // Adiciona o template T4 do CONTROLE
+            this.AddFileFromTemplate(
+                projeto,
+                arquivoDeDestino,
+                Constantes.Pastas.Controles + "\\MVVM",
                 parametros,
-                _viewModel.IgnorarSeExitir);
+                _viewModel.IgnorarSeExitir
+            );
         }
+
+        // Criação da área
 
         // Criação da ViewModel, em um modelo MVVM com AngularJS
 
-        // Criação da View
+        /// <summary>
+        /// Criação da View usando AngularJS
+        /// </summary>
+        /// <param name="projetoCorrente"></param>
+        /// <param name="entidade"></param>
+        /// <param name="diretorioRelativo"></param>
+        /// <param name="namespacePadrao"></param>
+        /// <param name="contextoDoBanco"></param>
+        /// <param name="efMetadata"></param>
+        private void NgVisao(Project projeto, CodeType entidade, string diretorioRelativo, string namespacePadrao, TipoDoModelo contextoDoBanco, ModelMetadata efMetadata)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

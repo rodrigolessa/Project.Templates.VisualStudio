@@ -1,0 +1,164 @@
+﻿<#@ template language="C#" HostSpecific="True" Debug="True" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="EnvDTE" #>
+<#@ ScaffoldingAssembly Processor="ScaffoldingAssemblyLoader" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Microsoft.AspNet.Scaffolding.Core.Metadata" #>
+<#@ parameter type="EnvDTE.CodeType" name="ModelType" #>
+<#@ parameter type="System.String" name="Namespace" #>
+<#@ parameter type="System.Collections.Generic.HashSet<System.String>" name="RequiredNamespaces" #>
+<#@ parameter type="Microsoft.AspNet.Scaffolding.Core.Metadata.ModelMetadata" name="MetadataModel" #>
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Web.Http;
+using System.Web.Http.Description;
+<# foreach (var namespaceName in RequiredNamespaces) { #>
+using <#= namespaceName #>;
+<# } #>
+
+namespace <#= Namespace #>
+{
+
+<# 
+	var dataParameter = ModelType.Name + "Data";
+	var primaryKeyName = MetadataModel.PrimaryKeys[0].PropertyName;
+    var primaryKeyShortTypeName = MetadataModel.PrimaryKeys[0].ShortTypeName;
+#>
+    public class <#= ModelType.Name #>Controller : ApiController
+    {
+		#region REST Request
+		// POST: api/<#= ModelType.Name #>
+        [ResponseType(typeof(JsonData))]
+		public async Task<JsonData> Post(<#= ModelType.Name #> <#= dataParameter #>)
+        {
+			JsonData data = new JsonData();
+
+            try
+            {
+                data.payload = await (new <#= ModelType.Name #>Service()).Create<#= ModelType.Name #>(<#= dataParameter #>);
+
+				data.total = 1;
+            }
+            catch (Exception ex)
+            {
+                data.errors = ex.Message;
+            }
+
+			return data;
+        }
+
+		// GET: api/<#= ModelType.Name #>
+		[ResponseType(typeof(JsonData))]
+		public async Task<JsonData> Get()
+		{
+			JsonData data = new JsonData();
+
+            try
+            {
+				data.payload = await (new <#= ModelType.Name #>Service()).Get<#= ModelType.Name #>();
+
+				data.total = ((List<<#= ModelType.Name #>>)data.payload).Count;
+            }
+            catch (Exception ex)
+            {
+                data.errors = ex.Message;
+            }
+
+            return data;
+		}
+
+		// GET: api/<#= ModelType.Name #>/5
+        [ResponseType(typeof(JsonData))]
+		public async Task<JsonData> Get(<#= primaryKeyShortTypeName #> id)
+        {
+
+            JsonData data = new JsonData();
+
+            try
+            {
+                <#= ModelType.Name #> <#= dataParameter #> = await (new <#= ModelType.Name #>Service()).Get<#= ModelType.Name #>(id);
+
+                if (<#= dataParameter #> == null)
+                {
+                    data.errors = "Data not found";
+                    data.total = 0;
+                }
+                else
+                {
+                    data.payload = <#= dataParameter #>;
+                    data.total = 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                data.errors = ex.Message;
+            }
+
+            return data;
+        }
+
+		// GET: api/<#= ModelType.Name #>/Read
+		[ResponseType(typeof(JsonData))]
+		public async Task<JsonData> Read(int iPage, int iLength, string strSearch)
+		{
+			JsonData data = new JsonData();
+
+            try
+            {
+				data.payload = await (new <#= ModelType.Name #>Service()).Read<#= ModelType.Name #>(iPage, iLength, strSearch);
+
+				data.total = await (new <#= ModelType.Name #>Service()).GetTotalCount();
+            }
+            catch (Exception ex)
+            {
+                data.errors = ex.Message;
+            }
+
+            return data;
+		}
+
+		// PUT: api/<#= ModelType.Name #>/5
+        [ResponseType(typeof(JsonData))]
+		public async Task<JsonData> Put(<#= primaryKeyShortTypeName #> id, <#= ModelType.Name #> <#= dataParameter #>)
+        {
+            JsonData data = new JsonData();
+
+            try
+            {
+                data.payload = await (new <#= ModelType.Name #>Service()).Update<#= ModelType.Name #>(<#= dataParameter #>);
+
+				data.total = 1;
+            }
+            catch (Exception ex)
+            {
+                data.errors = ex.Message;
+            }
+
+            return data;
+        }
+
+		// DELETE: api/<#= ModelType.Name #>/5
+        [ResponseType(typeof(JsonData))]
+		public async Task<JsonData> Delete(<#= primaryKeyShortTypeName #> id)
+        {
+            JsonData data = new JsonData();
+
+            try
+            {
+                data.payload = await (new <#= ModelType.Name #>Service()).Delete<#= ModelType.Name #>(id);
+
+				data.total = 1;
+            }
+            catch (Exception ex)
+            {
+                data.errors = ex.Message;
+            }
+
+            return data;
+        }
+		#endregion REST Request
+    }
+}

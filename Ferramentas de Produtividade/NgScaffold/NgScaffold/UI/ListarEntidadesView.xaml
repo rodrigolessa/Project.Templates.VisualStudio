@@ -37,8 +37,8 @@
                   VerticalAlignment="Top" Width="413" 
                   SelectionChanged="cboListaDeContextos_SelectionChanged" 
                   DisplayMemberPath="DisplayName"
-                  ItemsSource="{Binding ContextosDoBanco}" 
-                  SelectedItem="{Binding ContextoDoBancoSelecionado, Mode=OneWayToSource}">
+                  ItemsSource="{Binding ListaDeContextosDeBanco}" 
+                  SelectedItem="{Binding ContextoDeBancoSelecionado, Mode=OneWayToSource}">
             <ComboBox.Background>
                 <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                     <GradientStop Color="#FFF0F0F0" Offset="0"/>

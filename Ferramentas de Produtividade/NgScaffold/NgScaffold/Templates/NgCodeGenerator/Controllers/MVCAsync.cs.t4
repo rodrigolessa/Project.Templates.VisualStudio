@@ -1,0 +1,161 @@
+﻿<#@ template language="C#" HostSpecific="True" Debug="True" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="EnvDTE" #>
+<#@ ScaffoldingAssembly Processor="ScaffoldingAssemblyLoader" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Microsoft.AspNet.Scaffolding.Core.Metadata" #>
+<#@ parameter type="EnvDTE.CodeType" name="ModelType" #>
+<#@ parameter type="System.String" name="Namespace" #>
+<#@ parameter type="System.Collections.Generic.HashSet<System.String>" name="RequiredNamespaces" #>
+<#@ parameter type="Microsoft.AspNet.Scaffolding.Core.Metadata.ModelMetadata" name="MetadataModel" #>
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+<# foreach (var namespaceName in RequiredNamespaces) { #>
+using <#= namespaceName #>;
+<# } #>
+
+namespace <#= Namespace #>
+{
+
+<# 
+	var dataParameter = ModelType.Name + "Data";
+	var primaryKeyName = MetadataModel.PrimaryKeys[0].PropertyName;
+    var primaryKeyShortTypeName = MetadataModel.PrimaryKeys[0].ShortTypeName;
+#>
+    public class <#= ModelType.Name #>Controller : Controller
+    {
+		// GET: News
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+		#region API request
+		public async Task<JsonResult> Post(<#= ModelType.Name #> <#= dataParameter #>)
+        {
+			JsonData data = new JsonData();
+
+            try
+            {
+                data.payload = await (new <#= ModelType.Name #>Service()).Create<#= ModelType.Name #>(<#= dataParameter #>);
+
+				data.total = 1;
+            }
+            catch (Exception ex)
+            {
+                data.errors = ex.Message;
+            }
+
+			return Json(data);
+        }
+
+		[ValidateAntiForgeryToken]
+		public async Task<JsonResult> Get()
+		{
+			JsonData data = new JsonData();
+
+            try
+            {
+				data.payload = await (new <#= ModelType.Name #>Service()).Get<#= ModelType.Name #>();
+
+				data.total = ((List<<#= ModelType.Name #>>)data.payload).Count;
+            }
+            catch (Exception ex)
+            {
+                data.errors = ex.Message;
+            }
+
+            return Json(data);
+		}
+
+		[ValidateAntiForgeryToken]
+        public async Task<JsonResult> Get<#= ModelType.Name #>(<#= primaryKeyShortTypeName #> id)
+        {
+
+            JsonData data = new JsonData();
+
+            try
+            {
+                <#= ModelType.Name #> <#= dataParameter #> = await (new <#= ModelType.Name #>Service()).Get<#= ModelType.Name #>(id);
+
+                if (<#= dataParameter #> == null)
+                {
+                    data.errors = "Data not found";
+                    data.total = 0;
+                }
+                else
+                {
+                    data.payload = <#= dataParameter #>;
+                    data.total = 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                data.errors = ex.Message;
+            }
+
+            return Json(data);
+        }
+
+		[ValidateAntiForgeryToken]
+		public async Task<JsonResult> Read<#= ModelType.Name #>(int iPage, int iLength, string strSearch)
+		{
+			JsonData data = new JsonData();
+
+            try
+            {
+				data.payload = await (new <#= ModelType.Name #>Service()).Read<#= ModelType.Name #>(iPage, iLength, strSearch);
+
+				data.total = await (new <#= ModelType.Name #>Service()).GetTotalCount();
+            }
+            catch (Exception ex)
+            {
+                data.errors = ex.Message;
+            }
+
+            return Json(data);
+		}
+
+		public async Task<JsonResult> Put(<#= primaryKeyShortTypeName #> id, <#= ModelType.Name #> <#= dataParameter #>)
+        {
+            JsonData data = new JsonData();
+
+            try
+            {
+                data.payload = await (new <#= ModelType.Name #>Service()).Update<#= ModelType.Name #>(<#= dataParameter #>);
+
+				data.total = 1;
+            }
+            catch (Exception ex)
+            {
+                data.errors = ex.Message;
+            }
+
+            return Json(data);
+        }
+
+		[ValidateAntiForgeryToken]
+        public async Task<JsonResult> Delete(<#= primaryKeyShortTypeName #> id)
+        {
+            JsonData data = new JsonData();
+
+            try
+            {
+                data.payload = await (new <#= ModelType.Name #>Service()).Delete<#= ModelType.Name #>(id);
+
+				data.total = 1;
+            }
+            catch (Exception ex)
+            {
+                data.errors = ex.Message;
+            }
+
+            return Json(data);
+        }
+		#endregion API request
+    }
+}

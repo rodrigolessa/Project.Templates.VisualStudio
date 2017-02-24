@@ -1,0 +1,104 @@
+﻿<#@ template language="C#" HostSpecific="True" Debug="True" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="EnvDTE" #>
+<#@ ScaffoldingAssembly Processor="ScaffoldingAssemblyLoader" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Microsoft.AspNet.Scaffolding.Core.Metadata" #>
+<#@ parameter type="EnvDTE.CodeType" name="ModelType" #>
+<#@ parameter type="System.String" name="Namespace" #>
+<#@ parameter type="System.Collections.Generic.HashSet<System.String>" name="RequiredNamespaces" #>
+<#@ parameter type="Microsoft.AspNet.Scaffolding.Core.Metadata.ModelMetadata" name="MetadataModel" #>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
+using System.Web.Http.Description;
+
+// Framework LDSoft
+using LDSoft.Comum.Domain;
+using LDSoft.Comum.Infrastructure;
+using LDSoft.Comum.Infrastructure.Logging;
+using LDSoft.Comum.Infrastructure.Entity.Logging;
+
+<# foreach (var namespaceName in RequiredNamespaces) { #>
+using <#= namespaceName #>;
+<# } #>
+
+//using LDSoft.*.Domain.Entities;
+//using LDSoft.*.Domain.Repositories;
+//using LDSoft.*.Domain.Services;
+//using LDSoft.*.Infrastructure.Data.Repositories;
+//using LDSoft.*.Infrastructure.Data.UnitOfWork;
+
+namespace <#= Namespace #>
+{
+<# 
+	var dataParameter = ModelType.Name + "Data";
+	var primaryKeyName = MetadataModel.PrimaryKeys[0].PropertyName;
+    var primaryKeyShortTypeName = MetadataModel.PrimaryKeys[0].ShortTypeName;
+#>
+    public class <#= ModelType.Name #>Controller : SecurityAPIController
+    {
+        private MainUnitOfWork _unit;
+        private I<#= ModelType.Name #>Repository _repository;
+        private I<#= ModelType.Name #>Service _service;
+
+        #region Construtor
+
+        public <#= ModelType.Name #>Controller()
+        {
+            _unit = new MainUnitOfWork();
+            _repository = new <#= ModelType.Name #>Repository(_unit);
+            _service = new <#= ModelType.Name #>Service(_repository, _unit);
+
+            <# // Buscar nome do sistema nas constantes do framework #>
+
+            //TODO: Remover do Controller a instância do Log
+            LogFactory.SetCurrent(new EntityLogFactory(Constants.Geral.Sistema.Intranet));
+            //TODO: Atribuir usuário logado
+            LogFactory.SetCurrentUser("", 123);
+        }
+
+        #endregion
+
+		// GET: api/<#= ModelType.Name #>
+		public IEnumerable<<#= ModelType.Name #>> Get()
+		{
+			return _service.Obter();
+		}
+
+		// GET: api/<#= ModelType.Name #>/5
+		public <#= ModelType.Name #> Get(<#= primaryKeyShortTypeName #> id)
+        {
+			return _service.Obter(id);
+        }
+
+		// GET: api/<#= ModelType.Name #>/Read
+		public IEnumerable<<#= ModelType.Name #>> Read(int pagina, int tamanho, string busca)
+		{
+			return _service.Obter(pagina, tamanho, busca);
+		}
+
+		// POST: api/<#= ModelType.Name #>
+		public BusinessResponse<bool> Post(<#= ModelType.Name #> <#= dataParameter #>)
+        {
+			return _service.Salvar(<#= dataParameter #>);
+        }
+
+		// PUT: api/<#= ModelType.Name #>/5
+		public BusinessResponse<bool> Put(<#= primaryKeyShortTypeName #> id, <#= ModelType.Name #> <#= dataParameter #>)
+        {
+            return _service.Salvar(<#= dataParameter #>);
+        }
+
+		// DELETE: api/<#= ModelType.Name #>/5
+		public BusinessResponse<bool> Delete(<#= primaryKeyShortTypeName #> id)
+        {
+			return _service.Excluir(id);
+        }
+    }
+}
